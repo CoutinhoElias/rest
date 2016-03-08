@@ -1,6 +1,8 @@
 import requests
 from django.contrib.auth.models import User
 from django.shortcuts import render
+from rest_framework import viewsets
+
 from sosmypc.core.forms import TecnicoForm
 
 from django.http import HttpResponse
@@ -119,8 +121,8 @@ def pessoa_list(request):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-    
-    
+
+
 @csrf_exempt
 def pessoa_detail(request, pk):
     """
@@ -146,3 +148,8 @@ def pessoa_detail(request, pk):
     elif request.method == 'DELETE':
         pessoa.delete()
         return HttpResponse(status=204)
+
+
+class PessoaViewSet(viewsets.ModelViewSet):
+    queryset = Pessoa.objects.all().order_by('nomepessoa')
+    serializer_class = PessoaSerializer
