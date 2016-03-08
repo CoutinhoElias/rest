@@ -16,7 +16,7 @@ Including another URLconf
 
 
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from sosmypc.core.views import geoCoordenada, pessoa_list, pessoa_detail
 
@@ -26,4 +26,16 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^pessoas/$', pessoa_list),
     url(r'^pessoas/(?P<pk>[0-9]+)/$', pessoa_detail),
+]
+
+# -----------------------------------------------------------
+from rest_framework import routers
+from sosmypc.core.views import PessoaViewSet
+
+router = routers.DefaultRouter()
+router.register(r'pessoas', PessoaViewSet)
+
+urlpatterns = urlpatterns + [
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
